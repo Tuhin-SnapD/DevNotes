@@ -9,7 +9,7 @@ A beautiful, modern knowledge garden built with Astro and Tailwind CSS. This is 
 - **Search Functionality**: Quick search through all your notes
 - **Add Notes Feature**: Create and manage your own notes through the web interface
 - **TIL Posts**: Share daily learnings and insights with quick-add functionality
-- **Auto-deployment**: Automatically deploys to GitHub Pages
+- **Auto-deployment**: Automatically deploys to Netlify
 - **Content Collections**: Organized content management with Astro's content collections
 - **RSS Feed**: Subscribe to updates via RSS
 - **Sitemap**: SEO-friendly sitemap generation
@@ -19,7 +19,7 @@ A beautiful, modern knowledge garden built with Astro and Tailwind CSS. This is 
 - **Framework**: [Astro](https://astro.build/) - Static site generator
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - **Content**: Markdown files with frontmatter for easy note-taking
-- **Deployment**: GitHub Pages with automatic deployment
+- **Deployment**: Netlify with automatic deployment
 - **Typography**: Tailwind Typography plugin for beautiful content rendering
 
 ## 📁 Project Structure
@@ -61,15 +61,17 @@ src/
 
 ## 🚀 Deployment
 
-This site automatically deploys to GitHub Pages when you push to the `main` branch. The deployment is handled by GitHub Actions.
+This site automatically deploys to Netlify when you push to the `main` branch. The deployment is handled by Netlify's build system.
 
 ### Manual Deployment
 
 If you need to deploy manually:
 
 ```bash
-npm run deploy
+npm run build
 ```
+
+Then upload the `dist` folder to your Netlify site.
 
 ## 📝 Adding Content
 

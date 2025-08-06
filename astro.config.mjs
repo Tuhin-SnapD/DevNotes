@@ -4,7 +4,7 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://tuhin-snapd.github.io',
+  site: 'https://your-netlify-site.netlify.app',
   base: '/',
   output: 'server',
   adapter: netlify(),

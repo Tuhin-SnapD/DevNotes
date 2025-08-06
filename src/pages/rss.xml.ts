@@ -7,7 +7,7 @@ export async function GET() {
   const publishedNotes = notes.filter(note => note.data.published);
   const publishedTilPosts = tilPosts.filter(post => post.data.published);
 
-  const baseUrl = 'https://tuhin-snapd.github.io';
+  const baseUrl = 'https://your-netlify-site.netlify.app';
 
   // Combine and sort all content by date
   const allContent = [
