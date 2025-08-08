@@ -32,93 +32,165 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
     <meta name="twitter:description" content={description} />
     {image && <meta name="twitter:image" content={image} />}
   </head>
-  <body class="min-h-screen bg-gray-50 dark:bg-dark-900">
+  <body class="min-h-screen">
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
-      <aside class="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0" id="sidebar">
-        <div class="flex flex-col flex-grow bg-white dark:bg-dark-800 pt-5 pb-4 overflow-y-auto border-r border-gray-200 dark:border-dark-700">
-          <div class="flex items-center flex-shrink-0 px-4">
-            <h1 class="text-xl font-bold text-gray-900 dark:text-white">
-              📚 DevNotes
-            </h1>
+      <!-- Desktop Sidebar -->
+      <aside class="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 z-30" id="sidebar">
+        <div class="flex flex-col flex-grow glass pt-8 pb-6 overflow-y-auto border-r border-gray-200/30 dark:border-dark-700/30">
+          <!-- Logo -->
+          <div class="flex items-center flex-shrink-0 px-8 mb-12">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span class="text-white text-xl font-bold">📚</span>
+              </div>
+              <h1 class="text-2xl font-bold gradient-text">
+                DevNotes
+              </h1>
+            </div>
           </div>
-          <nav class="mt-8 flex-1 px-2 space-y-1">
-            <a href="/" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
-              🏠 Home
+          
+          <!-- Navigation -->
+          <nav class="flex-1 px-6 space-y-3">
+            <a href="/" class="nav-link group">
+              <div class="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-700 dark:to-dark-600 rounded-lg flex items-center justify-center mr-4 group-hover:from-primary-100 group-hover:to-primary-200 dark:group-hover:from-primary-900/30 dark:group-hover:to-primary-800/30 transition-all duration-300">
+                <span class="text-lg">🏠</span>
+              </div>
+              <span class="font-semibold">Home</span>
             </a>
-            <a href="/notes" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
-              📝 All Notes
+            <a href="/notes" class="nav-link group">
+              <div class="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-700 dark:to-dark-600 rounded-lg flex items-center justify-center mr-4 group-hover:from-primary-100 group-hover:to-primary-200 dark:group-hover:from-primary-900/30 dark:group-hover:to-primary-800/30 transition-all duration-300">
+                <span class="text-lg">📝</span>
+              </div>
+              <span class="font-semibold">All Notes</span>
             </a>
-            <a href="/til" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
-              💡 Today I Learned
+            <a href="/til" class="nav-link group">
+              <div class="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-700 dark:to-dark-600 rounded-lg flex items-center justify-center mr-4 group-hover:from-primary-100 group-hover:to-primary-200 dark:group-hover:from-primary-900/30 dark:group-hover:to-primary-800/30 transition-all duration-300">
+                <span class="text-lg">💡</span>
+              </div>
+              <span class="font-semibold">Today I Learned</span>
             </a>
           </nav>
+          
+          <!-- Footer -->
+          <div class="px-6 pt-6 border-t border-gray-200/30 dark:border-dark-700/30">
+            <div class="text-center">
+              <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                Your digital knowledge garden
+              </p>
+              <div class="mt-3 flex justify-center space-x-2">
+                <div class="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></div>
+                <div class="w-2 h-2 bg-primary-500 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                <div class="w-2 h-2 bg-primary-600 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
 
       <!-- Mobile sidebar overlay -->
       <div class="fixed inset-0 z-40 lg:hidden hidden" id="sidebar-overlay">
-        <div class="fixed inset-0 bg-gray-600 bg-opacity-75" id="sidebar-backdrop"></div>
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" id="sidebar-backdrop"></div>
       </div>
 
       <!-- Mobile sidebar -->
-      <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-dark-800 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden" id="mobile-sidebar">
-        <div class="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto border-r border-gray-200 dark:border-dark-700">
-          <div class="flex items-center justify-between flex-shrink-0 px-4">
-            <h1 class="text-xl font-bold text-gray-900 dark:text-white">
-              📚 DevNotes
-            </h1>
-            <button type="button" class="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark-700" id="close-sidebar">
+      <div class="fixed inset-y-0 left-0 z-50 w-80 glass transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden" id="mobile-sidebar">
+        <div class="flex flex-col flex-grow pt-8 pb-6 overflow-y-auto">
+          <!-- Mobile Header -->
+          <div class="flex items-center justify-between flex-shrink-0 px-8 mb-12">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span class="text-white text-xl font-bold">📚</span>
+              </div>
+              <h1 class="text-2xl font-bold gradient-text">
+                DevNotes
+              </h1>
+            </div>
+            <button type="button" class="p-2 rounded-xl text-gray-400 hover:text-gray-500 hover:bg-gray-100/50 dark:hover:bg-dark-700/50 transition-all duration-300" id="close-sidebar">
               <span class="sr-only">Close sidebar</span>
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
-          <nav class="mt-8 flex-1 px-2 space-y-1">
-            <a href="/" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
-              🏠 Home
+          
+          <!-- Mobile Navigation -->
+          <nav class="flex-1 px-6 space-y-3">
+            <a href="/" class="nav-link group">
+              <div class="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-700 dark:to-dark-600 rounded-lg flex items-center justify-center mr-4 group-hover:from-primary-100 group-hover:to-primary-200 dark:group-hover:from-primary-900/30 dark:group-hover:to-primary-800/30 transition-all duration-300">
+                <span class="text-lg">🏠</span>
+              </div>
+              <span class="font-semibold">Home</span>
             </a>
-            <a href="/notes" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
-              📝 All Notes
+            <a href="/notes" class="nav-link group">
+              <div class="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-700 dark:to-dark-600 rounded-lg flex items-center justify-center mr-4 group-hover:from-primary-100 group-hover:to-primary-200 dark:group-hover:from-primary-900/30 dark:group-hover:to-primary-800/30 transition-all duration-300">
+                <span class="text-lg">📝</span>
+              </div>
+              <span class="font-semibold">All Notes</span>
             </a>
-            <a href="/til" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
-              💡 Today I Learned
+            <a href="/til" class="nav-link group">
+              <div class="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-dark-700 dark:to-dark-600 rounded-lg flex items-center justify-center mr-4 group-hover:from-primary-100 group-hover:to-primary-200 dark:group-hover:from-primary-900/30 dark:group-hover:to-primary-800/30 transition-all duration-300">
+                <span class="text-lg">💡</span>
+              </div>
+              <span class="font-semibold">Today I Learned</span>
             </a>
           </nav>
+          
+          <!-- Mobile Footer -->
+          <div class="px-6 pt-6 border-t border-gray-200/30 dark:border-dark-700/30">
+            <div class="text-center">
+              <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                Your digital knowledge garden
+              </p>
+              <div class="mt-3 flex justify-center space-x-2">
+                <div class="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></div>
+                <div class="w-2 h-2 bg-primary-500 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                <div class="w-2 h-2 bg-primary-600 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Main content -->
-      <div class="lg:pl-64 flex flex-col flex-1">
+      <div class="lg:pl-80 flex flex-col flex-1">
         <!-- Top navigation -->
-        <header class="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-700">
-          <div class="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-            <div class="flex items-center">
-              <button type="button" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark-700" id="open-sidebar">
+        <header class="glass shadow-lg border-b border-gray-200/30 dark:border-dark-700/30 sticky top-0 z-20">
+          <div class="flex items-center justify-between px-6 py-5">
+            <!-- Mobile menu button and title -->
+            <div class="flex items-center gap-4">
+              <button type="button" class="lg:hidden p-2.5 rounded-xl text-gray-400 hover:text-gray-500 hover:bg-gray-100/50 dark:hover:bg-dark-700/50 transition-all duration-300" id="open-sidebar">
                 <span class="sr-only">Open sidebar</span>
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-              <h1 class="text-lg font-semibold text-gray-900 dark:text-white ml-2 lg:ml-0">
+              <h1 class="text-xl font-bold text-gray-900 dark:text-white lg:hidden gradient-text">
                 {title}
               </h1>
             </div>
             
-            <div class="flex items-center space-x-4">
+            <!-- Search and actions -->
+            <div class="flex items-center gap-4">
               <!-- Search -->
-              <div class="relative">
-                <input type="text" placeholder="Search notes..." class="search-input w-64" id="search-input">
-                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <div class="relative hidden sm:block">
+                <input type="text" placeholder="Search notes..." class="search-input w-72 lg:w-96" id="search-input">
+                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                   <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
               </div>
               
+              <!-- Mobile search button -->
+              <button type="button" class="sm:hidden p-2.5 rounded-xl text-gray-400 hover:text-gray-500 hover:bg-gray-100/50 dark:hover:bg-dark-700/50 transition-all duration-300" id="mobile-search-toggle">
+                <span class="sr-only">Search</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+              
               <!-- Dark mode toggle -->
-              <button type="button" class="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-dark-700" id="theme-toggle">
+              <button type="button" class="p-2.5 rounded-xl text-gray-400 hover:text-gray-500 hover:bg-gray-100/50 dark:hover:bg-dark-700/50 transition-all duration-300 glow" id="theme-toggle">
                 <span class="sr-only">Toggle dark mode</span>
                 <svg class="h-6 w-6 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="sun-icon">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -127,6 +199,18 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               </button>
+            </div>
+          </div>
+          
+          <!-- Mobile search bar -->
+          <div class="px-6 pb-5 sm:hidden hidden" id="mobile-search">
+            <div class="relative">
+              <input type="text" placeholder="Search notes..." class="search-input w-full" id="mobile-search-input">
+              <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
             </div>
           </div>
         </header>
@@ -155,15 +239,28 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
       
       // Search functionality
       const searchInput = document.getElementById('search-input');
-      searchInput?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          const target = e.target;
-          const query = target && 'value' in target ? target.value : '';
-          if (query.trim()) {
-            window.location.href = `/notes?search=${encodeURIComponent(query)}`;
+      const mobileSearchInput = document.getElementById('mobile-search-input');
+      
+      function handleSearch(input) {
+        input?.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            const target = e.target;
+            const query = target && 'value' in target ? target.value : '';
+            if (query.trim()) {
+              // Determine which page to search based on current location
+              const currentPath = window.location.pathname;
+              if (currentPath.startsWith('/til')) {
+                window.location.href = `/til?search=${encodeURIComponent(query)}`;
+              } else {
+                window.location.href = `/notes?search=${encodeURIComponent(query)}`;
+              }
+            }
           }
-        }
-      });
+        });
+      }
+      
+      handleSearch(searchInput);
+      handleSearch(mobileSearchInput);
 
       // Mobile sidebar functionality
       const openSidebarBtn = document.getElementById('open-sidebar');
@@ -188,10 +285,33 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
       closeSidebarBtn?.addEventListener('click', closeSidebar);
       sidebarBackdrop?.addEventListener('click', closeSidebar);
 
+      // Mobile search toggle
+      const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+      const mobileSearch = document.getElementById('mobile-search');
+      
+      mobileSearchToggle?.addEventListener('click', () => {
+        mobileSearch?.classList.toggle('hidden');
+        if (!mobileSearch?.classList.contains('hidden')) {
+          mobileSearchInput?.focus();
+        }
+      });
+
       // Close sidebar on escape key
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           closeSidebar();
+          mobileSearch?.classList.add('hidden');
+        }
+      });
+
+      // Active navigation highlighting
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath.startsWith(href) && href !== '/')) {
+          link.classList.add('active');
         }
       });
     </script>

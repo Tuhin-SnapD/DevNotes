@@ -20,130 +20,307 @@ const { Content } = await note.render();
 ---
 
 <Layout title={`${note.data.title} - DevNotes`}>
-  <div class="px-4 py-8 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-    <!-- Breadcrumb -->
-    <nav class="mb-6">
-      <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-        <li><a href="/" class="hover:text-primary-600">Home</a></li>
-        <li><span class="mx-2">/</span></li>
-        <li><a href="/notes" class="hover:text-primary-600">Notes</a></li>
-        <li><span class="mx-2">/</span></li>
-        <li class="text-gray-900 dark:text-white">{note.data.title}</li>
-      </ol>
-    </nav>
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress" class="fixed top-0 left-0 w-full h-1 bg-gray-200 dark:bg-dark-700 z-50">
+    <div id="reading-progress-bar" class="h-full bg-primary-600 transition-all duration-300 ease-out" style="width: 0%"></div>
+  </div>
+  
+  <div class="container-responsive py-8 sm:py-12">
+    <div class="max-w-4xl mx-auto">
+      <!-- Breadcrumb -->
+      <nav class="mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+          <li><a href="/" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200">Home</a></li>
+          <li><span class="mx-2">/</span></li>
+          <li><a href="/notes" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200">Notes</a></li>
+          <li><span class="mx-2">/</span></li>
+          <li class="text-gray-900 dark:text-white font-medium">{note.data.title}</li>
+        </ol>
+      </nav>
 
-    <!-- Note Header -->
-    <article class="mb-8">
-      <header class="mb-8">
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-sm text-gray-500 dark:text-gray-400">{note.data.date}</span>
-          {note.data.readTime && (
-            <span class="text-sm text-gray-500 dark:text-gray-400">{note.data.readTime}</span>
-          )}
-        </div>
-        
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {note.data.title}
-        </h1>
-        
-        <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">
-          {note.data.description}
-        </p>
-        
-        <!-- Tags -->
-        <div class="flex flex-wrap gap-2 mb-6">
-          {note.data.tags.map((tag: string) => (
-            <span class="tag">{tag}</span>
-          ))}
-        </div>
-        
-        <!-- Meta Info -->
-        <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-          <span class="capitalize">Category: {note.data.category}</span>
-          {note.data.difficulty && (
-            <span class={`px-2 py-1 rounded-full text-xs ${
-              note.data.difficulty === 'beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-              note.data.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-              'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-            }`}>
-              {note.data.difficulty}
-            </span>
-          )}
-        </div>
-      </header>
+      <!-- Note Header -->
+      <article class="mb-12">
+        <header class="mb-8 sm:mb-12">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <span class="text-sm text-gray-500 dark:text-gray-400">{note.data.date}</span>
+            {note.data.readTime && (
+              <span class="text-sm text-gray-500 dark:text-gray-400">{note.data.readTime}</span>
+            )}
+          </div>
+          
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+            {note.data.title}
+          </h1>
+          
+          <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+            {note.data.description}
+          </p>
+          
+          <!-- Tags -->
+          <div class="flex flex-wrap gap-2 mb-8">
+            {note.data.tags.map((tag: string) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+          
+          <!-- Meta Info -->
+                      <div class="flex flex-col sm:flex-row sm:items-center gap-4 text-sm">
+              <span class="text-gray-600 dark:text-gray-400 capitalize">
+                Category: <span class="font-medium text-gray-900 dark:text-white">{note.data.category}</span>
+              </span>
+              {note.data.difficulty && (
+                <span class={`px-3 py-1 rounded-full text-xs font-medium ${
+                  note.data.difficulty === 'beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                  note.data.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                  'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                }`}>
+                  {note.data.difficulty}
+                </span>
+              )}
+              <span class="text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                <span id="view-count">0</span> views
+              </span>
+              <button 
+                id="share-button"
+                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 flex items-center gap-1 transition-colors duration-200"
+                title="Share this note"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                </svg>
+                Share
+              </button>
+              <button 
+                id="print-button"
+                class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 flex items-center gap-1 transition-colors duration-200"
+                title="Print this note"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                </svg>
+                Print
+              </button>
+            </div>
+        </header>
 
-      <!-- Note Content -->
-      <div class="prose prose-lg dark:prose-invert max-w-none">
-        <Content />
+        <!-- Table of Contents -->
+        <div id="toc-container" class="mb-8 p-6 bg-gray-50 dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-700 hidden">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Table of Contents</h3>
+          <nav id="toc" class="space-y-2">
+            <!-- TOC will be populated by JavaScript -->
+          </nav>
+        </div>
+
+        <!-- Note Content -->
+        <div class="prose-custom" id="content">
+          <Content />
+        </div>
+      </article>
+
+      <!-- Related Notes -->
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-8 sm:pt-12">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Related Notes</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="related-notes">
+          <!-- Related notes will be populated by JavaScript -->
+        </div>
       </div>
-    </article>
 
-    <!-- Navigation -->
-    <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-      <div class="flex justify-between items-center">
-        <a href="/notes" class="text-primary-600 hover:text-primary-700 font-medium">
-          ← Back to All Notes
-        </a>
-        <div class="flex gap-4">
-          <a href="/til" class="text-primary-600 hover:text-primary-700 font-medium">
-            View TIL Posts →
+      <!-- Navigation -->
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-8 sm:pt-12">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <a href="/notes" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium transition-colors duration-200 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to All Notes
           </a>
+          <div class="flex gap-4">
+            <a href="/til" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium transition-colors duration-200 flex items-center gap-2">
+              View TIL Posts
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Back to Top Button -->
+  <button 
+    id="back-to-top"
+    class="fixed bottom-8 right-8 p-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg transition-all duration-300 opacity-0 invisible hover:scale-110"
+    title="Back to top"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+    </svg>
+  </button>
 </Layout>
 
-<style>
-  .prose {
-    @apply text-gray-900 dark:text-gray-100;
-  }
-  
-  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-    @apply text-gray-900 dark:text-white font-bold;
-  }
-  
-  .prose h1 {
-    @apply text-3xl mb-6 mt-8;
-  }
-  
-  .prose h2 {
-    @apply text-2xl mb-4 mt-6;
-  }
-  
-  .prose h3 {
-    @apply text-xl mb-3 mt-5;
-  }
-  
-  .prose p {
-    @apply mb-4 leading-relaxed;
-  }
-  
-  .prose ul, .prose ol {
-    @apply mb-4 pl-6;
-  }
-  
-  .prose li {
-    @apply mb-2;
-  }
-  
-  .prose code {
-    @apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono;
-  }
-  
-  .prose pre {
-    @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4;
-  }
-  
-  .prose pre code {
-    @apply bg-transparent p-0;
-  }
-  
-  .prose blockquote {
-    @apply border-l-4 border-primary-500 pl-4 italic text-gray-700 dark:text-gray-300;
-  }
-  
-  .prose a {
-    @apply text-primary-600 hover:text-primary-700 underline;
-  }
-</style> 
+<script>
+  // View count and related notes functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const viewCountElement = document.getElementById('view-count');
+    const relatedNotesContainer = document.getElementById('related-notes');
+    
+    // View count functionality
+    if (viewCountElement) {
+      const noteSlug = window.location.pathname.split('/').pop();
+      const storageKey = `view-count-${noteSlug}`;
+      let currentCount = parseInt(localStorage.getItem(storageKey) || '0');
+      
+      currentCount++;
+      localStorage.setItem(storageKey, currentCount.toString());
+      viewCountElement.textContent = currentCount.toString();
+    }
+
+    // Related notes functionality
+    if (relatedNotesContainer) {
+      // This would typically fetch from an API, but for now we'll show a placeholder
+      const relatedNotes = [
+        {
+          title: "Git Workflow Best Practices",
+          description: "Essential Git commands and workflows for team collaboration",
+          url: "/notes/git-workflow",
+          category: "devops"
+        },
+        {
+          title: "Binary Search Implementation",
+          description: "Complete guide to binary search with examples in Python, JavaScript, and Java",
+          url: "/notes/binary-search",
+          category: "algorithms"
+        }
+      ];
+
+      relatedNotes.forEach(note => {
+        const noteElement = document.createElement('div');
+        noteElement.className = 'card p-6 card-hover group';
+        noteElement.innerHTML = `
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
+            <a href="${note.url}">${note.title}</a>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">${note.description}</p>
+          <span class="tag">${note.category}</span>
+        `;
+        relatedNotesContainer.appendChild(noteElement);
+      });
+    }
+
+    // Share functionality
+    const shareButton = document.getElementById('share-button');
+    if (shareButton) {
+      shareButton.addEventListener('click', async () => {
+        const title = document.querySelector('h1')?.textContent || 'DevNotes';
+        const url = window.location.href;
+        
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: title,
+              url: url
+            });
+          } catch (err) {
+            console.log('Share cancelled');
+          }
+        } else {
+          // Fallback: copy to clipboard
+          try {
+            await navigator.clipboard.writeText(url);
+            shareButton.textContent = 'Copied!';
+            setTimeout(() => {
+              shareButton.innerHTML = `
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                </svg>
+                Share
+              `;
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy URL');
+          }
+        }
+      });
+    }
+
+    // Print functionality
+    const printButton = document.getElementById('print-button');
+    if (printButton) {
+      printButton.addEventListener('click', () => {
+        window.print();
+      });
+    }
+
+    // Table of Contents functionality
+    const tocContainer = document.getElementById('toc-container');
+    const toc = document.getElementById('toc');
+    const content = document.getElementById('content');
+    
+    if (tocContainer && toc && content) {
+      const headings = content.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      
+      if (headings.length > 2) { // Show TOC if there are more than 2 headings
+        tocContainer.classList.remove('hidden');
+        
+        headings.forEach((heading, index) => {
+          const headingText = heading.textContent || '';
+          const headingLevel = parseInt(heading.tagName.charAt(1));
+          const headingId = `heading-${index}`;
+          
+          heading.id = headingId;
+          
+          const tocItem = document.createElement('a');
+          tocItem.href = `#${headingId}`;
+          tocItem.className = `block text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 ${headingLevel > 2 ? 'ml-4' : ''}`;
+          tocItem.textContent = headingText;
+          
+          toc.appendChild(tocItem);
+        });
+      }
+    }
+
+    // Reading Progress functionality
+    const readingProgressBar = document.getElementById('reading-progress-bar');
+    if (readingProgressBar && content) {
+      const updateReadingProgress = () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        
+        readingProgressBar.style.width = Math.min(scrollPercent, 100) + '%';
+      };
+      
+      window.addEventListener('scroll', updateReadingProgress);
+      updateReadingProgress(); // Initial call
+    }
+
+    // Back to Top functionality
+    const backToTopButton = document.getElementById('back-to-top');
+    if (backToTopButton) {
+      const toggleBackToTop = () => {
+        if (window.pageYOffset > 300) {
+          backToTopButton.classList.remove('opacity-0', 'invisible');
+          backToTopButton.classList.add('opacity-100', 'visible');
+        } else {
+          backToTopButton.classList.add('opacity-0', 'invisible');
+          backToTopButton.classList.remove('opacity-100', 'visible');
+        }
+      };
+      
+      backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+      
+      window.addEventListener('scroll', toggleBackToTop);
+      toggleBackToTop(); // Initial call
+    }
+  });
+</script> 

@@ -20,116 +20,99 @@ const { Content } = await post.render();
 ---
 
 <Layout title={`${post.data.title} - TIL - DevNotes`}>
-  <div class="px-4 py-8 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-    <!-- Breadcrumb -->
-    <nav class="mb-6">
-      <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-        <li><a href="/" class="hover:text-primary-600">Home</a></li>
-        <li><span class="mx-2">/</span></li>
-        <li><a href="/til" class="hover:text-primary-600">TIL</a></li>
-        <li><span class="mx-2">/</span></li>
-        <li class="text-gray-900 dark:text-white">{post.data.title}</li>
-      </ol>
-    </nav>
+  <div class="container-responsive py-8 sm:py-12">
+    <div class="max-w-4xl mx-auto">
+      <!-- Breadcrumb -->
+      <nav class="mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+          <li><a href="/" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200">Home</a></li>
+          <li><span class="mx-2">/</span></li>
+          <li><a href="/til" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200">TIL</a></li>
+          <li><span class="mx-2">/</span></li>
+          <li class="text-gray-900 dark:text-white font-medium">{post.data.title}</li>
+        </ol>
+      </nav>
 
-    <!-- TIL Post Header -->
-    <article class="mb-8">
-      <header class="mb-8">
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-sm text-gray-500 dark:text-gray-400">{post.data.date}</span>
-          <span class="tag">{post.data.category}</span>
+      <!-- TIL Post Header -->
+      <article class="mb-12">
+        <header class="mb-8 sm:mb-12">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <span class="text-sm text-gray-500 dark:text-gray-400">{post.data.date}</span>
+            <span class="tag">{post.data.category}</span>
+          </div>
+          
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+            {post.data.title}
+          </h1>
+          
+          {post.data.description && (
+            <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+              {post.data.description}
+            </p>
+          )}
+          
+          <!-- Tags -->
+          <div class="flex flex-wrap gap-2 mb-8">
+            {post.data.tags.map((tag: string) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+          
+          <!-- View Count -->
+          <div class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 mb-8">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            <span id="view-count">0</span> views
+          </div>
+        </header>
+
+        <!-- TIL Content -->
+        <div class="prose-custom">
+          <Content />
         </div>
-        
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {post.data.title}
-        </h1>
-        
-        {post.data.description && (
-          <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">
-            {post.data.description}
-          </p>
-        )}
-        
-        <!-- Tags -->
-        <div class="flex flex-wrap gap-2 mb-6">
-          {post.data.tags.map((tag: string) => (
-            <span class="tag">{tag}</span>
-          ))}
-        </div>
-      </header>
+      </article>
 
-      <!-- TIL Content -->
-      <div class="prose prose-lg dark:prose-invert max-w-none">
-        <Content />
-      </div>
-    </article>
-
-    <!-- Navigation -->
-    <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-      <div class="flex justify-between items-center">
-        <a href="/til" class="text-primary-600 hover:text-primary-700 font-medium">
-          ← Back to All TIL Posts
-        </a>
-        <div class="flex gap-4">
-          <a href="/notes" class="text-primary-600 hover:text-primary-700 font-medium">
-            View Notes →
+      <!-- Navigation -->
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-8 sm:pt-12">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <a href="/til" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium transition-colors duration-200 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to All TIL Posts
           </a>
+          <div class="flex gap-4">
+            <a href="/notes" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium transition-colors duration-200 flex items-center gap-2">
+              View Notes
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </Layout>
 
-<style>
-  .prose {
-    @apply text-gray-900 dark:text-gray-100;
-  }
-  
-  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-    @apply text-gray-900 dark:text-white font-bold;
-  }
-  
-  .prose h1 {
-    @apply text-3xl mb-6 mt-8;
-  }
-  
-  .prose h2 {
-    @apply text-2xl mb-4 mt-6;
-  }
-  
-  .prose h3 {
-    @apply text-xl mb-3 mt-5;
-  }
-  
-  .prose p {
-    @apply mb-4 leading-relaxed;
-  }
-  
-  .prose ul, .prose ol {
-    @apply mb-4 pl-6;
-  }
-  
-  .prose li {
-    @apply mb-2;
-  }
-  
-  .prose code {
-    @apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm font-mono;
-  }
-  
-  .prose pre {
-    @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto mb-4;
-  }
-  
-  .prose pre code {
-    @apply bg-transparent p-0;
-  }
-  
-  .prose blockquote {
-    @apply border-l-4 border-primary-500 pl-4 italic text-gray-700 dark:text-gray-300;
-  }
-  
-  .prose a {
-    @apply text-primary-600 hover:text-primary-700 underline;
-  }
-</style>
+<script>
+  // View count functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const viewCountElement = document.getElementById('view-count');
+    if (!viewCountElement) return;
+
+    // Get current view count from localStorage
+    const postSlug = window.location.pathname.split('/').pop();
+    const storageKey = `view-count-${postSlug}`;
+    let currentCount = parseInt(localStorage.getItem(storageKey) || '0');
+    
+    // Increment view count
+    currentCount++;
+    localStorage.setItem(storageKey, currentCount.toString());
+    
+    // Update display
+    viewCountElement.textContent = currentCount.toString();
+  });
+</script>

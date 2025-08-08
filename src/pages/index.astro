@@ -22,79 +22,160 @@ const featuredNotes = publishedNotes.filter(note => note.data.featured).slice(0,
 ---
 
 <Layout title="DevNotes - Your Public Knowledge Garden">
-  <div class="px-4 py-8 sm:px-6 lg:px-8">
+  <div class="container-responsive py-12 sm:py-16 lg:py-20">
     <!-- Hero Section -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-        📚 Welcome to DevNotes
-      </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-        Your personal digital garden of technical knowledge. Explore algorithms, system design, 
-        Python tricks, and everything in between.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/notes" class="btn-primary">
-          Browse All Notes
-        </a>
-        <a href="/til" class="btn-secondary">
-          Today I Learned
-        </a>
+    <div class="text-center mb-16 sm:mb-20 lg:mb-24 animate-fade-in-up">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-8">
+          <div class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-primary-50 to-primary-100/50 dark:from-primary-900/20 dark:to-primary-800/20 rounded-full border border-primary-200/50 dark:border-primary-700/50 backdrop-blur-sm mb-8">
+            <div class="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
+            <span class="text-sm font-semibold text-primary-700 dark:text-primary-300">Your Digital Knowledge Garden</span>
+          </div>
+        </div>
+        
+        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
+          Welcome to{' '}
+          <span class="gradient-text">DevNotes</span>
+        </h1>
+        <p class="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
+          Your personal digital garden of technical knowledge. Explore algorithms, system design, 
+          Python tricks, and everything in between.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+          <a href="/notes" class="btn-primary text-lg px-10 py-4 group">
+            <span class="flex items-center gap-3">
+              📚 Browse All Notes
+              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
+          </a>
+          <a href="/til" class="btn-secondary text-lg px-10 py-4 group">
+            <span class="flex items-center gap-3">
+              💡 Today I Learned
+              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
+          </a>
+        </div>
       </div>
     </div>
 
     <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-      <div class="card p-6 text-center">
-        <div class="text-3xl font-bold text-primary-600 mb-2">{totalNotes}</div>
-        <div class="text-gray-600 dark:text-gray-400">Total Notes</div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-20 lg:mb-24 stagger-animation">
+      <div class="card p-8 sm:p-10 text-center card-hover group">
+        <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+          <span class="text-2xl">📊</span>
+        </div>
+        <div class="text-4xl sm:text-5xl font-bold gradient-text mb-3">{totalNotes}</div>
+        <div class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Total Notes</div>
       </div>
-      <div class="card p-6 text-center">
-        <div class="text-3xl font-bold text-primary-600 mb-2">{allCategories.length}</div>
-        <div class="text-gray-600 dark:text-gray-400">Categories</div>
+      <div class="card p-8 sm:p-10 text-center card-hover group">
+        <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+          <span class="text-2xl">🏷️</span>
+        </div>
+        <div class="text-4xl sm:text-5xl font-bold gradient-text mb-3">{allCategories.length}</div>
+        <div class="text-gray-600 dark:text-gray-400 font-semibold text-lg">Categories</div>
       </div>
-      <div class="card p-6 text-center">
-        <div class="text-3xl font-bold text-primary-600 mb-2">{totalTilPosts}</div>
-        <div class="text-gray-600 dark:text-gray-400">TIL Posts</div>
+      <div class="card p-8 sm:p-10 text-center card-hover group">
+        <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+          <span class="text-2xl">💡</span>
+        </div>
+        <div class="text-4xl sm:text-5xl font-bold gradient-text mb-3">{totalTilPosts}</div>
+        <div class="text-gray-600 dark:text-gray-400 font-semibold text-lg">TIL Posts</div>
       </div>
     </div>
 
-    <!-- Available Notes -->
-    <div class="mb-12">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-        Featured Notes
-      </h2>
+    <!-- Featured Notes -->
+    <div class="mb-20 lg:mb-24">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Featured Notes
+          </h2>
+          <p class="text-gray-600 dark:text-gray-300 text-lg">
+            Handpicked content to get you started
+          </p>
+        </div>
+        <a href="/notes" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-semibold text-lg transition-all duration-300 hover:translate-x-1 flex items-center gap-2">
+          View all 
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+      
       {featuredNotes.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 stagger-animation">
           {featuredNotes.map(note => (
-            <a href={`/notes/${note.slug}`} class="card p-6 hover:shadow-lg transition-shadow duration-200">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <a href={`/notes/${note.slug}`} class="card p-8 lg:p-10 card-hover group">
+              <div class="flex items-center justify-between mb-6">
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">{note.data.date}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">{note.data.readTime || '5 min read'}</span>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300 leading-tight">
                 {note.data.title}
               </h3>
-              <p class="text-gray-600 dark:text-gray-300 text-sm">
+              <p class="text-gray-600 dark:text-gray-300 text-base lg:text-lg mb-6 leading-relaxed">
                 {note.data.description}
               </p>
-              <div class="flex flex-wrap gap-2 mt-3">
+              <div class="flex flex-wrap gap-2 mb-6">
                 {note.data.tags.slice(0, 3).map(tag => (
                   <span class="tag">{tag}</span>
                 ))}
+              </div>
+              <div class="flex items-center justify-between">
+                <span class={`px-4 py-2 text-sm rounded-full font-semibold ${
+                  note.data.difficulty === 'beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                  note.data.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                  'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                }`}>
+                  {note.data.difficulty}
+                </span>
+                <span class="text-primary-600 group-hover:text-primary-700 dark:text-primary-400 dark:group-hover:text-primary-300 text-sm font-semibold transition-colors duration-300 flex items-center gap-2">
+                  Read more 
+                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
               </div>
             </a>
           ))}
         </div>
       ) : (
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 stagger-animation">
           {publishedNotes.slice(0, 4).map(note => (
-            <a href={`/notes/${note.slug}`} class="card p-6 hover:shadow-lg transition-shadow duration-200">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <a href={`/notes/${note.slug}`} class="card p-8 lg:p-10 card-hover group">
+              <div class="flex items-center justify-between mb-6">
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">{note.data.date}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">{note.data.readTime || '5 min read'}</span>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300 leading-tight">
                 {note.data.title}
               </h3>
-              <p class="text-gray-600 dark:text-gray-300 text-sm">
+              <p class="text-gray-600 dark:text-gray-300 text-base lg:text-lg mb-6 leading-relaxed">
                 {note.data.description}
               </p>
-              <div class="flex flex-wrap gap-2 mt-3">
+              <div class="flex flex-wrap gap-2 mb-6">
                 {note.data.tags.slice(0, 3).map(tag => (
                   <span class="tag">{tag}</span>
                 ))}
+              </div>
+              <div class="flex items-center justify-between">
+                <span class={`px-4 py-2 text-sm rounded-full font-semibold ${
+                  note.data.difficulty === 'beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                  note.data.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                  'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                }`}>
+                  {note.data.difficulty}
+                </span>
+                <span class="text-primary-600 group-hover:text-primary-700 dark:text-primary-400 dark:group-hover:text-primary-300 text-sm font-semibold transition-colors duration-300 flex items-center gap-2">
+                  Read more 
+                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
               </div>
             </a>
           ))}
@@ -102,6 +183,46 @@ const featuredNotes = publishedNotes.filter(note => note.data.featured).slice(0,
       )}
     </div>
 
+    <!-- Categories Preview -->
+    <div class="mb-20 lg:mb-24">
+      <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-12">
+        Explore by Category
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 stagger-animation">
+        {allCategories.slice(0, 6).map(category => (
+          <a href={`/notes?category=${category}`} class="card p-6 text-center card-hover group">
+            <div class="w-12 h-12 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+              <span class="text-2xl">📁</span>
+            </div>
+            <div class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
 
+    <!-- Call to Action -->
+    <div class="text-center">
+      <div class="card p-12 lg:p-16 max-w-3xl mx-auto">
+        <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-8">
+          <span class="text-3xl">🚀</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          Ready to dive deeper?
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-10 text-xl leading-relaxed">
+          Start exploring our comprehensive collection of technical notes and tutorials.
+        </p>
+        <a href="/notes" class="btn-primary text-xl px-12 py-5 group">
+          <span class="flex items-center gap-3">
+            Start Exploring
+            <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
   </div>
 </Layout>

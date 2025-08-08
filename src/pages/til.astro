@@ -8,6 +8,7 @@ const allTilPosts = await getCollection('til');
 // Get URL parameters for filtering
 const url = new URL(Astro.request.url);
 const selectedCategory = url.searchParams.get('category') || 'all';
+const searchQuery = url.searchParams.get('search') || '';
 
 // Filter TIL posts based on parameters
 let filteredTilPosts = allTilPosts.filter(post => post.data.published);
@@ -21,103 +22,306 @@ const categories = ['all', ...new Set(allTilPosts.map(post => post.data.category
 ---
 
 <Layout title="Today I Learned - DevNotes">
-  <div class="px-4 py-8 sm:px-6 lg:px-8">
+  <div class="container-responsive py-12 sm:py-16 lg:py-20">
     <!-- Header -->
-    <div class="mb-8">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="mb-12 lg:mb-16">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          <div class="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-primary-50 to-primary-100/50 dark:from-primary-900/20 dark:to-primary-800/20 rounded-full border border-primary-200/50 dark:border-primary-700/50 backdrop-blur-sm mb-6">
+            <div class="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
+            <span class="text-sm font-semibold text-primary-700 dark:text-primary-300">Daily Discoveries</span>
+          </div>
+          <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             💡 Today I Learned
           </h1>
-          <p class="text-gray-600 dark:text-gray-300">
+          <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
             Micro-posts about things I learn every day. Small discoveries that make a big difference.
           </p>
         </div>
-
       </div>
     </div>
 
+    <!-- Search and Filters -->
+    <div class="mb-12 lg:mb-16 space-y-8">
+      <!-- Search -->
+      <div class="relative">
+        <input 
+          type="text" 
+          placeholder="Search TIL posts by title, description, or tags..." 
+          class="search-input text-lg"
+          id="search-input"
+          value={searchQuery}
+        >
+        <div id="search-loading" class="absolute inset-y-0 right-16 flex items-center pointer-events-none hidden">
+          <svg class="w-6 h-6 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+        <div class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none">
+          <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
 
-
-    <!-- Category Filter -->
-    <div class="mb-8">
-      <div class="flex flex-wrap gap-2">
+      <!-- Category Filter -->
+      <div class="flex flex-wrap gap-4">
         {categories.map(category => (
           <a 
             href={category === 'all' ? '/til' : `/til?category=${category}`}
-            class={`px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${
+            class={`px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300 ${
               category === 'all' && selectedCategory === 'all' || category === selectedCategory
-                ? 'bg-primary-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600'
+                ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5'
+                : 'bg-white/80 dark:bg-dark-800/80 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-dark-700/80 border border-gray-200/50 dark:border-dark-600/50 backdrop-blur-sm hover:shadow-lg hover:-translate-y-0.5'
             }`}>
-            {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
+            {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
           </a>
         ))}
+      </div>
+
+      <!-- Sort By -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Sort by:</label>
+        <select class="px-4 py-3 border border-gray-300/50 dark:border-dark-600/50 rounded-xl bg-white/80 dark:bg-dark-800/80 text-gray-900 dark:text-gray-100 text-base focus:ring-2 focus:ring-primary-500/30 focus:border-transparent transition-all duration-300 shadow-lg backdrop-blur-sm font-medium" id="sort-filter">
+          <option value="date-desc">Newest First</option>
+          <option value="date-asc">Oldest First</option>
+          <option value="title-asc">Title A-Z</option>
+          <option value="title-desc">Title Z-A</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Search Results Info -->
+    <div id="search-info" class="mb-8 p-6 bg-gradient-to-r from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-800/20 rounded-2xl hidden border border-green-200/50 dark:border-green-800/50 backdrop-blur-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-base text-green-800 dark:text-green-200 font-medium">
+          <strong>Search Results:</strong>
+          <span id="search-count">0</span> TIL posts found for "<span id="search-term"></span>"
+        </p>
+        <button id="clear-search" class="text-sm text-green-600 dark:text-green-300 hover:text-green-800 dark:hover:text-green-100 font-semibold transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-green-100/50 dark:hover:bg-green-800/30">
+          Clear search
+        </button>
       </div>
     </div>
 
     <!-- TIL Posts -->
-    <div class="mb-8">
-      {filteredTilPosts.length > 0 ? (
-        <div class="space-y-6">
-          {filteredTilPosts.map(post => (
-            <article class="card p-6">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-sm text-gray-500 dark:text-gray-400">{post.data.date}</span>
+    <div class="mb-12">
+      <div id="til-container" class="space-y-8 lg:space-y-10 stagger-animation">
+        {filteredTilPosts.map(post => (
+          <article 
+            class="card p-8 lg:p-10 card-hover group"
+            data-category={post.data.category}
+          >
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">{post.data.date}</span>
                 <span class="tag">{post.data.category}</span>
               </div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                <a href={`/til/${post.slug}`} class="hover:text-primary-600 transition-colors duration-200">
+              <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300 leading-tight">
+                <a href={`/til/${post.slug}`}>
                   {post.data.title}
                 </a>
               </h3>
               {post.data.description && (
-                <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+                <p class="text-gray-600 dark:text-gray-300 mb-6 text-base lg:text-lg leading-relaxed">
                   {post.data.description}
                 </p>
               )}
-              <div class="flex flex-wrap gap-2 mb-4">
+              <div class="flex flex-wrap gap-2 mb-6">
                 {post.data.tags.map(tag => (
                   <span class="tag">{tag}</span>
                 ))}
               </div>
               <div class="flex justify-between items-center">
-                <a href={`/til/${post.slug}`} class="text-primary-600 hover:text-primary-700 font-medium">
-                  Read full post →
+                <a href={`/til/${post.slug}`} class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-semibold transition-colors duration-300 flex items-center gap-2 group/link">
+                  Read full post
+                  <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                  </svg>
                 </a>
               </div>
             </article>
           ))}
         </div>
-      ) : (
-        <div class="text-center py-12">
-          <div class="text-gray-500 dark:text-gray-400 mb-4">
-            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-          </div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            No TIL posts found
-          </h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
-            {selectedCategory !== 'all' 
-              ? `No TIL posts found in the "${selectedCategory}" category.`
-              : 'Start sharing your daily learnings and discoveries.'
-            }
-          </p>
-          <a href="/notes" class="btn-primary">
-            Create Your First Note
-          </a>
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="text-center py-16 lg:py-20 hidden">
+        <div class="text-gray-500 dark:text-gray-400 mb-8">
+          <svg class="mx-auto h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
         </div>
-      )}
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          No TIL posts found
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto text-lg">
+          Try adjusting your search or filters to find what you're looking for.
+        </p>
+        <button id="clear-all-filters" class="btn-primary text-lg px-8 py-4">
+          Clear all filters
+        </button>
+      </div>
     </div>
-
-
   </div>
+</Layout>
 
+<script>
+  // Frontend-only search and filtering for TIL posts
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get initial search query from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialSearchQuery = urlParams.get('search') || '';
+    
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const sortFilter = document.getElementById('sort-filter') as HTMLSelectElement;
+    const tilContainer = document.getElementById('til-container') as HTMLElement;
+    const noResults = document.getElementById('no-results') as HTMLElement;
+    const searchInfo = document.getElementById('search-info') as HTMLElement;
+    const searchCount = document.getElementById('search-count') as HTMLElement;
+    const searchTerm = document.getElementById('search-term') as HTMLElement;
+    const clearSearch = document.getElementById('clear-search') as HTMLElement;
+    const clearAllFilters = document.getElementById('clear-all-filters') as HTMLElement;
+    const searchLoading = document.getElementById('search-loading') as HTMLElement;
 
+    if (!searchInput || !tilContainer) {
+      return;
+    }
 
+    // Store all TIL posts for client-side filtering
+    const allTilPosts = Array.from(tilContainer.children) as HTMLElement[];
+    let searchTimeout: number;
 
+    function performSearch() {
+      const searchQuery = searchInput.value.toLowerCase().trim();
+      const currentCategory = new URLSearchParams(window.location.search).get('category') || 'all';
+      const sortBy = sortFilter.value;
 
+      let visiblePosts = 0;
+      let searchResults = 0;
 
-</Layout> 
+      allTilPosts.forEach(post => {
+        const title = post.querySelector('h3 a')?.textContent?.toLowerCase() || '';
+        const description = post.querySelector('p')?.textContent?.toLowerCase() || '';
+        const tags = Array.from(post.querySelectorAll('.tag')).map(tag => tag.textContent?.toLowerCase() || '');
+        const postCategory = post.getAttribute('data-category') || '';
+
+        // Check category filter
+        const categoryMatch = currentCategory === 'all' || postCategory === currentCategory;
+
+        // Check search query
+        const searchMatch = !searchQuery || 
+          title.includes(searchQuery) || 
+          description.includes(searchQuery) || 
+          tags.some(tag => tag.includes(searchQuery));
+
+        // Show/hide post based on all filters
+        if (categoryMatch && searchMatch) {
+          post.style.display = 'block';
+          visiblePosts++;
+          if (searchQuery) searchResults++;
+        } else {
+          post.style.display = 'none';
+        }
+      });
+
+      // Sort visible posts
+      if (visiblePosts > 0) {
+        const visiblePostElements = allTilPosts.filter(post => post.style.display !== 'none');
+        sortPosts(visiblePostElements, sortBy);
+      }
+
+      // Update UI
+      updateSearchUI(searchQuery, searchResults, visiblePosts);
+    }
+
+    function sortPosts(posts: HTMLElement[], sortBy: string) {
+      const postsArray = Array.from(posts);
+      
+      postsArray.sort((a, b) => {
+        const titleA = a.querySelector('h3 a')?.textContent || '';
+        const titleB = b.querySelector('h3 a')?.textContent || '';
+        const dateA = a.querySelector('.text-sm')?.textContent || '';
+        const dateB = b.querySelector('.text-sm')?.textContent || '';
+        
+        switch (sortBy) {
+          case 'date-desc':
+            return new Date(dateB).getTime() - new Date(dateA).getTime();
+          case 'date-asc':
+            return new Date(dateA).getTime() - new Date(dateB).getTime();
+          case 'title-asc':
+            return titleA.localeCompare(titleB);
+          case 'title-desc':
+            return titleB.localeCompare(titleA);
+          default:
+            return 0;
+        }
+      });
+      
+      // Reorder DOM elements
+      const container = posts[0]?.parentElement;
+      if (container) {
+        postsArray.forEach(post => container.appendChild(post));
+      }
+    }
+
+    function updateSearchUI(searchQuery: string, searchResults: number, visiblePosts: number) {
+      // Update search info
+      if (searchQuery) {
+        searchInfo.classList.remove('hidden');
+        searchCount.textContent = searchResults.toString();
+        searchTerm.textContent = searchQuery;
+      } else {
+        searchInfo.classList.add('hidden');
+      }
+
+      // Show/hide no results message
+      if (visiblePosts === 0) {
+        tilContainer.style.display = 'none';
+        noResults.classList.remove('hidden');
+      } else {
+        tilContainer.style.display = 'block';
+        noResults.classList.add('hidden');
+      }
+    }
+
+    // Search input events with debounce
+    searchInput.addEventListener('input', () => {
+      // Show loading indicator
+      searchLoading?.classList.remove('hidden');
+      
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        performSearch();
+        // Hide loading indicator
+        searchLoading?.classList.add('hidden');
+      }, 300); // 300ms delay
+    });
+
+    // Sort filter change event
+    sortFilter.addEventListener('change', performSearch);
+
+    // Clear search button
+    clearSearch?.addEventListener('click', () => {
+      searchInput.value = '';
+      performSearch();
+    });
+
+    // Clear all filters button
+    clearAllFilters?.addEventListener('click', () => {
+      searchInput.value = '';
+      sortFilter.value = 'date-desc';
+      performSearch();
+    });
+
+    // Initialize search on page load
+    performSearch();
+    
+    // If there's a search query in the URL, show search results
+    if (initialSearchQuery) {
+      searchInfo.classList.remove('hidden');
+      searchCount.textContent = '0'; // Will be updated by performSearch
+      searchTerm.textContent = initialSearchQuery;
+    }
+  });
+</script> 
