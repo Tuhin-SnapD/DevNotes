@@ -1,4 +1,14 @@
-/// <reference path="../.astro/types.d.ts" />
+/// <reference types="astro/client" />
+
+interface ImportMetaEnv {
+  readonly PROD: boolean;
+  readonly DEV: boolean;
+  readonly MODE: 'development' | 'production';
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
 
 declare global {
   interface Window {
@@ -8,5 +18,3 @@ declare global {
     };
   }
 }
-
-export {};

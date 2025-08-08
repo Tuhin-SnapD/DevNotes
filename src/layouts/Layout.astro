@@ -49,14 +49,8 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
             <a href="/notes" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
               📝 All Notes
             </a>
-            <a href="/notes/add" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700 ml-4">
-              ➕ Add Note
-            </a>
             <a href="/til" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
               💡 Today I Learned
-            </a>
-            <a href="/til/add" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700 ml-4">
-              ➕ Add TIL
             </a>
           </nav>
         </div>
@@ -88,14 +82,8 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
             <a href="/notes" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
               📝 All Notes
             </a>
-            <a href="/notes/add" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700 ml-4">
-              ➕ Add Note
-            </a>
             <a href="/til" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700">
               💡 Today I Learned
-            </a>
-            <a href="/til/add" class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-dark-700 ml-4">
-              ➕ Add TIL
             </a>
           </nav>
         </div>
@@ -150,7 +138,7 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
       </div>
     </div>
 
-    <script>
+    <script is:inline>
       // Dark mode toggle
       const themeToggle = document.getElementById('theme-toggle');
       const sunIcon = document.getElementById('sun-icon');
@@ -166,10 +154,11 @@ const { title, description = "Your Public Knowledge Garden - Technical notes, ch
       });
       
       // Search functionality
-      const searchInput = document.getElementById('search-input') as HTMLInputElement;
+      const searchInput = document.getElementById('search-input');
       searchInput?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-          const query = (e.target as HTMLInputElement).value;
+          const target = e.target;
+          const query = target && 'value' in target ? target.value : '';
           if (query.trim()) {
             window.location.href = `/notes?search=${encodeURIComponent(query)}`;
           }

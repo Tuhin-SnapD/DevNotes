@@ -202,7 +202,7 @@ git rebase develop
 
 Create a comprehensive `.gitignore` file:
 
-```gitignore
+```text
 # Dependencies
 node_modules/
 vendor/

@@ -7,7 +7,7 @@ export async function GET() {
   const publishedNotes = notes.filter(note => note.data.published);
   const publishedTilPosts = tilPosts.filter(post => post.data.published);
 
-  const baseUrl = 'https://your-netlify-site.netlify.app';
+  const baseUrl = 'https://devnotesio.netlify.app';
 
   const pages = [
     '',

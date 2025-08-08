@@ -4,9 +4,9 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://your-netlify-site.netlify.app',
+  site: 'https://devnotesio.netlify.app/',
   base: '/',
-  output: 'server',
+  output: 'static',
   adapter: netlify(),
   integrations: [],
   markdown: {
@@ -15,5 +15,19 @@ export default defineConfig({
       wrap: true
     }
   },
-
+  vite: {
+    ssr: {
+      noExternal: ['@astrojs/netlify']
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'astro': ['astro'],
+            'tailwind': ['tailwindcss']
+          }
+        }
+      }
+    }
+  }
 });

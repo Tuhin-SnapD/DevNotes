@@ -25,15 +25,7 @@ if (selectedDifficulty !== 'all') {
 const categories = ['all', ...new Set(allNotes.map(note => note.data.category))];
 const difficulties = ['all', ...new Set(allNotes.map(note => note.data.difficulty))];
 
-// Debug logging
-console.log('Debug info:', {
-  totalNotes: allNotes.length,
-  filteredNotes: filteredNotes.length,
-  selectedCategory,
-  selectedDifficulty,
-  categories,
-  difficulties
-});
+
 ---
 
 <Layout title="All Notes - DevNotes">
@@ -49,12 +41,7 @@ console.log('Debug info:', {
             Explore all technical notes, tutorials, and learning resources.
           </p>
         </div>
-        <a href="/notes/add" class="btn-primary inline-flex items-center gap-2 self-start">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-          </svg>
-          Add Note
-        </a>
+
       </div>
     </div>
 
@@ -109,20 +96,7 @@ console.log('Debug info:', {
       </div>
     </div>
 
-    <!-- Debug Info (temporary) -->
-    {(selectedCategory !== 'all' || selectedDifficulty !== 'all') && (
-      <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-        <p class="text-sm text-blue-800 dark:text-blue-200">
-          <strong>Active Filters:</strong>
-          {selectedCategory !== 'all' && ` Category: ${selectedCategory}`}
-          {selectedDifficulty !== 'all' && ` Difficulty: ${selectedDifficulty}`}
-          <span class="ml-2">(<span id="filtered-count">{filteredNotes.length}</span> notes found)</span>
-        </p>
-        <a href="/notes" class="text-xs text-blue-600 dark:text-blue-300 hover:underline">
-          Clear all filters
-        </a>
-      </div>
-    )}
+
 
     <!-- Search Results Info -->
     <div id="search-info" class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hidden">
@@ -196,38 +170,10 @@ console.log('Debug info:', {
     </div>
     </div>
 
-    <!-- Call to Action -->
-    <div class="text-center bg-gradient-to-r from-primary-50 to-blue-50 dark:from-dark-800 dark:to-dark-700 rounded-2xl p-8">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-        Contribute to Your Knowledge Base
-      </h2>
-      <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-        Add your own notes, tutorials, and insights to build a comprehensive knowledge garden 
-        that grows with your learning journey.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/notes/add" class="btn-primary">
-          Add New Note
-        </a>
-        <a href="/til" class="btn-secondary">
-          Share TIL Posts
-        </a>
-      </div>
-    </div>
+
   </div>
 
-  <!-- Floating Action Button for Mobile -->
-  <div class="fixed bottom-6 right-6 lg:hidden z-50">
-    <a 
-      href="/notes/add" 
-      class="bg-primary-600 hover:bg-primary-700 text-white p-4 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
-      title="Add Note"
-    >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-      </svg>
-    </a>
-  </div>
+
 </Layout>
 
 <script>
@@ -246,17 +192,7 @@ console.log('Debug info:', {
     const filteredCount = document.getElementById('filtered-count') as HTMLElement;
     const searchLoading = document.getElementById('search-loading') as HTMLElement;
 
-    console.log('Elements found:', {
-      searchInput: !!searchInput,
-      categoryFilter: !!categoryFilter,
-      difficultyFilter: !!difficultyFilter,
-      notesContainer: !!notesContainer,
-      noResults: !!noResults,
-      searchInfo: !!searchInfo
-    });
-
     if (!searchInput || !categoryFilter || !difficultyFilter || !notesContainer) {
-      console.error('Required elements not found');
       return;
     }
 
@@ -269,7 +205,7 @@ console.log('Debug info:', {
       const category = categoryFilter.value;
       const difficulty = difficultyFilter.value;
 
-      console.log('Performing search:', { searchQuery, category, difficulty });
+
 
       let visibleNotes = 0;
       let searchResults = 0;
@@ -364,6 +300,6 @@ console.log('Debug info:', {
     // Initialize search on page load
     performSearch();
 
-    console.log('Frontend search functionality initialized successfully');
+
   });
 </script> 
